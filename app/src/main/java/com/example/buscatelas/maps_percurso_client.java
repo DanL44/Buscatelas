@@ -5,23 +5,21 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.buscatelas.Utils.Database;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link mapa_percurso_provider#newInstance} factory method to
+ * Use the {@link maps_percurso_client#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class mapa_percurso_provider extends Fragment {
+public class maps_percurso_client extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,12 +29,12 @@ public class mapa_percurso_provider extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private Database databs;
     private Button closeButton;
     private AlertDialog.Builder builder;
 
-    public mapa_percurso_provider() {
+
+    public maps_percurso_client() {
         // Required empty public constructor
     }
 
@@ -46,11 +44,11 @@ public class mapa_percurso_provider extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment mapa_percurso_provider.
+     * @return A new instance of fragment maps_percurso.
      */
     // TODO: Rename and change types and number of parameters
-    public static mapa_percurso_provider newInstance(String param1, String param2) {
-        mapa_percurso_provider fragment = new mapa_percurso_provider();
+    public static maps_percurso_client newInstance(String param1, String param2) {
+        maps_percurso_client fragment = new maps_percurso_client();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,7 +68,8 @@ public class mapa_percurso_provider extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mapa_percurso_provider, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_maps_percurso_client, container, false);
 
         if(container!= null){
             container.removeAllViews();
@@ -78,8 +77,9 @@ public class mapa_percurso_provider extends Fragment {
 
         databs = new Database();
 
-        closeButton = view.findViewById(R.id.button5);
+        closeButton = view.findViewById(R.id.button3);
         closeButton.setOnClickListener(new View.OnClickListener() {
+
 
 
             public void onClick(View v){
@@ -87,11 +87,10 @@ public class mapa_percurso_provider extends Fragment {
                 final EditText edittext = new EditText(getContext());
                 builder.setView(edittext);
 
-                builder.setMessage("Detalhes cliente")
+                builder.setMessage("Detalhes Provider")
                         .setCancelable(false)
                         .setPositiveButton("Search", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
 
                             }
                         })
@@ -103,20 +102,6 @@ public class mapa_percurso_provider extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.show();
 
-            }
-        });
-
-        Button selecionaraceitar = view.findViewById(R.id.button6);
-
-        selecionaraceitar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fragmentTransaction = getActivity()
-                        .getSupportFragmentManager().beginTransaction();
-                Toast.makeText(getContext(), "Trabalho terminado", Toast.LENGTH_SHORT).show();
-                fragmentTransaction.replace(R.id.nav_host_fragment_activity_provider, new pag_final_request());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
             }
         });
         return view;

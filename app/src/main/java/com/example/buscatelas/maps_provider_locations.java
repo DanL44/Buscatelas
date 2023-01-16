@@ -1,5 +1,7 @@
 package com.example.buscatelas;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,19 +10,14 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import com.example.buscatelas.databinding.FragmentChangePasswordBinding;
-import com.example.buscatelas.ui.worker.Aceitar_Pedido_worker;
-import com.example.buscatelas.ui.worker.Lista_pedidosPendentes_worker;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
+import com.example.buscatelas.Utils.Authentication;
+import com.example.buscatelas.Utils.Database;
+import com.example.buscatelas.models.Client;
+import com.example.buscatelas.models.Request;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,10 +34,17 @@ public class maps_provider_locations extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Button closeButton;
+    private AlertDialog.Builder builder;
+    private Request request;
+    private Database databs;
+    private String espc;
+
 
     public maps_provider_locations() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -58,6 +62,10 @@ public class maps_provider_locations extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public maps_provider_locations (String i) {
+        this.espc = i;
     }
 
     @Override
@@ -78,6 +86,8 @@ public class maps_provider_locations extends Fragment {
             container.removeAllViews();
         }
 
+        databs = new Database();
+
         Button passwordBtn = view.findViewById(R.id.button4);
 
         passwordBtn.setOnClickListener(new View.OnClickListener(){
@@ -85,8 +95,41 @@ public class maps_provider_locations extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new maps_percurso());
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new maps_percurso_client());
                 fragmentTransaction.commit();
+            }
+        });
+
+
+        closeButton = view.findViewById(R.id.buttonpopup);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v){
+                builder = new AlertDialog.Builder(getContext());
+                final EditText edittext = new EditText(getContext());
+                builder.setView(edittext);
+
+                builder.setMessage("Descriçao")
+                        .setCancelable(false)
+                        .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String descript = edittext.getText().toString();
+                                Authentication firebaseAuth = new Authentication(getActivity());
+                                FirebaseUser client = firebaseAuth.getCurrentUser();
+                                Client cli = databs.getClientById(client.getUid());
+                                request = new Request(cli,descript);
+                                databs.pushRequest(request, cli.getId());
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
 

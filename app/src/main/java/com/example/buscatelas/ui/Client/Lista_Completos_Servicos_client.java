@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.buscatelas.R;
+import com.example.buscatelas.Utils.Authentication;
+import com.example.buscatelas.Utils.Database;
+import com.example.buscatelas.models.Client;
+import com.example.buscatelas.models.Request;
 import com.example.buscatelas.ui.WorkerAndClient.ServicoCompleto;
 import com.example.buscatelas.ui.worker.Servico_worker;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -37,6 +43,7 @@ public class Lista_Completos_Servicos_client extends Fragment {
     ListView lv;
     ArrayList<String> al;
     ArrayAdapter<String> aa;
+    private Database databs;
 
     public Lista_Completos_Servicos_client() {
         // Required empty public constructor
@@ -83,8 +90,14 @@ public class Lista_Completos_Servicos_client extends Fragment {
         al = new ArrayList<String>();
         aa = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_activated_1,al);
         lv.setAdapter(aa);
-        al.add("Rui Mario- 23/12/22-16:30h");
-        al.add("Rui Mario- 23/12/22-16:30h");
+        Authentication firebaseAuth = new Authentication(getActivity());
+        FirebaseUser client = firebaseAuth.getCurrentUser();
+        Client cli = databs.getClientById(client.getUid());
+        ArrayList<Request> req = cli.getPastRequests();
+        for (Request request: req) {
+            al.add(request.getDescription()); // mudar para a especialidade
+        }
+
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

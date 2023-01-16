@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,11 +17,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.buscatelas.R;
 import com.example.buscatelas.Utils.Database;
 import com.example.buscatelas.databinding.FragmentHomeBinding;
-import com.example.buscatelas.maps_percurso;
 import com.example.buscatelas.maps_provider_locations;
 import com.example.buscatelas.models.Client;
 import com.example.buscatelas.ui.Client.Lista_Completos_Servicos_client;
-import com.example.buscatelas.ui.worker.Aceitar_Pedido_worker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +27,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 
@@ -122,7 +117,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations());
+                if(position == 0) {
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("eletrecista"));
+                }else if (position == 1){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("bombeiro"));
+                }else{
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations());
+                }
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

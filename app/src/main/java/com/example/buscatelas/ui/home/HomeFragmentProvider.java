@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.buscatelas.R;
 import com.example.buscatelas.Utils.Database;
 import com.example.buscatelas.databinding.FragmentHomeBinding;
+import com.example.buscatelas.maps_provider_locations;
 import com.example.buscatelas.models.Client;
 import com.example.buscatelas.ui.worker.Aceitar_Pedido_worker;
 import com.google.firebase.auth.FirebaseAuth;
@@ -118,7 +119,7 @@ public class HomeFragmentProvider extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.nav_host_fragment_activity_client, new Aceitar_Pedido_worker());
+                transaction.replace(R.id.nav_host_fragment_activity_provider, new Aceitar_Pedido_worker());
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
