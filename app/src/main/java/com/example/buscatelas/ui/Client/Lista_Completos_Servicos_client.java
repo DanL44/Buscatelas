@@ -94,8 +94,9 @@ public class Lista_Completos_Servicos_client extends Fragment {
         FirebaseUser client = firebaseAuth.getCurrentUser();
         Client cli = databs.getClientById(client.getUid());
         ArrayList<Request> req = cli.getPastRequests();
+
         for (Request request: req) {
-            al.add(request.getDescription()); // mudar para a especialidade
+            al.add(request.getSpecialization()); // mudar para a especialidade
         }
 
 

@@ -24,6 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.buscatelas.Utils.Authentication;
+import com.example.buscatelas.Utils.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,7 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class Login extends AppCompatActivity {
 
 
-    private FirebaseAuth mAuth;
+    private Authentication mAuth;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
@@ -44,7 +46,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = new Authentication(this);
+        Database database = new Database();
 
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
@@ -83,7 +86,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                loginFunction("ola3@gmail.com", "olaola");
+                mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
+                MyApplication app = (MyApplication) getApplication();
+                app.setAuth(mAuth);
+                app.setDatabase(database);
 
                 Button loginButton = findViewById(R.id.loginButton);
                 EditText emailText = findViewById(R.id.emailAdress);
@@ -97,30 +103,22 @@ public class Login extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
-
-                    //loginFunction(email, password);
+                    mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
+                    while(mAuth.getCurrentUser() == null);
+                    startActivity(new Intent(Login.this, ProviderActivity.class));
 
                 }
 
             }
         });
 
-
-
-
-
-
-
-
-
-
-
         Button client = findViewById(R.id.button);
         client.setOnClickListener( new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                loginFunction2("olaa@gmail.com", "olaola");
+                mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
+                startActivity(new Intent(Login.this, ClientActivity.class));
                 Button loginButton = findViewById(R.id.loginButton);
                 EditText emailText = findViewById(R.id.emailAdress);
 
@@ -134,7 +132,8 @@ public class Login extends AppCompatActivity {
                 }
                 else{
 
-                    loginFunction2("olaa@gmail.com", "olaola");
+                    mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
+                    startActivity(new Intent(Login.this, ClientActivity.class));
                 }
 
             }
@@ -160,63 +159,6 @@ public class Login extends AppCompatActivity {
                 startActivity(i);
             }
         });
-    }
-
-
-
-
-    private void loginFunction2(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(Login.this, "Success!",
-                                    Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(Login.this, ClientActivity.class));
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(Login.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //System.out.println(task.getException());
-                        }
-                    }
-                });
-    }
-
-
-
-
-
-
-    private void loginFunction(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(Login.this, "Success!",
-                                    Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(Login.this, ProviderActivity.class));
-                            //startActivity(new Intent(Login.this, ClientActivity.class));
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(Login.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //System.out.println(task.getException());
-                        }
-                    }
-                });
     }
 
 

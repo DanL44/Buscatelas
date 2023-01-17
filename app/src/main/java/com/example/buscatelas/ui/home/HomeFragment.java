@@ -108,8 +108,17 @@ public class HomeFragment extends Fragment {
         al = new ArrayList<String>();
         aa = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_activated_1,al);
         lv.setAdapter(aa);
-        al.add("eletrecista");
-        al.add("bombeiro");
+
+        al.add("Eletric Job");
+        al.add("Plumber");
+        al.add("Home repairs");
+        al.add("Home maintenance");
+        al.add("Home installations");
+        al.add("Painting");
+        al.add("Senior Home Upgrades");
+        al.add("General Yard Maintenance");
+
+
 
 
 
@@ -118,10 +127,23 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 if(position == 0) {
-                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("eletrecista"));
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("elect"));
                 }else if (position == 1){
-                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("bombeiro"));
-                }else{
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("plumber"));
+                }else if (position == 2){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("repairs"));
+                }else if (position == 3){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("maintenance"));
+                }else if (position == 4){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("installations"));
+                }else if (position == 5){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("Painting"));
+                }else if (position == 6){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("senior"));
+                }else if (position == 7){
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("yard"));
+                }
+                else{
                     transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations());
                 }
                 transaction.addToBackStack(null);

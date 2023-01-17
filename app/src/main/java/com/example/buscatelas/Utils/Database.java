@@ -8,7 +8,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class Database {
 
@@ -17,7 +20,6 @@ public class Database {
     public Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-
     }
 
     public void pushClient(Client client, String id) {
@@ -104,7 +106,59 @@ public class Database {
             }
         });
         return serviceProvider [0];
-
     }
+
+    public ArrayList<Request> getRequests(String skill) {
+        // Get a reference to the Firebase Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("requests");
+
+        // Build the query to find requests where serviceProvider field is null
+        // and the skill field is equal to the specified skill
+        Query query = ref.orderByChild("serviceProvider").equalTo(null)
+                .orderByChild("specialization").equalTo(skill).orderByChild("done").equalTo(false);
+
+        // Get the requests from the query
+        ArrayList<Request> requests = new ArrayList<>();
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Request request = ds.getValue(Request.class);
+                    requests.add(request);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle the error
+            }
+        });
+
+        return requests;
+    }
+
+    public ArrayList<ServiceProvider> findProvidersWithSkill(String skill) {
+        ArrayList<ServiceProvider> providers = new ArrayList<>();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot providerSnapshot : dataSnapshot.getChildren()) {
+                    ServiceProvider provider = providerSnapshot.getValue(ServiceProvider.class);
+                    if (provider.getSkills().contains(skill)) {
+                        providers.add(provider);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle error
+            }
+        });
+        return providers;
+    }
+
+
 
 }

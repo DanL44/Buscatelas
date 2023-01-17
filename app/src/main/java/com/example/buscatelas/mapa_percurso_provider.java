@@ -88,10 +88,10 @@ public class mapa_percurso_provider extends Fragment {
                 builder.setView(edittext);
 
                 builder.setMessage("Detalhes cliente")
+                        //adicionar os dados do client
                         .setCancelable(false)
-                        .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
 
                             }
                         })

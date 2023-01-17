@@ -84,12 +84,11 @@ public class maps_percurso_client extends Fragment {
 
             public void onClick(View v){
                 builder = new AlertDialog.Builder(getContext());
-                final EditText edittext = new EditText(getContext());
-                builder.setView(edittext);
 
                 builder.setMessage("Detalhes Provider")
+                        //adicionar os dados do provider
                         .setCancelable(false)
-                        .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
                             }

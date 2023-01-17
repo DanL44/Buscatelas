@@ -1,5 +1,7 @@
 package com.example.buscatelas.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 public class Client {
@@ -11,6 +13,7 @@ public class Client {
     private String id;
     private String token;
     private ArrayList<Request> pastRequests;
+    private LatLng location;
 
     public Client(String name, String email, String phoneNumber){
         this.name = name;
@@ -79,5 +82,13 @@ public class Client {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 }

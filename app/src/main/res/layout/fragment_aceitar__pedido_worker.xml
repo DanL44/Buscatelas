@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="329dp"
-        android:text="Data Disponivel:" />
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="252dp"
+        android:text="Descriçao" />
 
     <TextView
         android:id="@+id/textView16"
@@ -22,19 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="373dp"
-        android:text="Dia:" />
-
-    <TextView
-        android:id="@+id/textView29"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="427dp"
-        android:text="Hora:" />
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="287dp"
+        android:text="TextView" />
 
     <TextView
         android:id="@+id/textView11"
@@ -42,8 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="276dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="540dp"
         android:text="Orçamento Previsto:" />
 
     <TextView
@@ -53,8 +43,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="31dp"
-        android:layout_marginTop="206dp"
-        android:text="Orçamento Maximo:" />
+        android:layout_marginTop="211dp"
+        android:text="Serviço:" />
 
     <TextView
         android:id="@+id/textView9"
@@ -111,8 +101,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="170dp"
-        android:layout_marginTop="207dp"
+        android:layout_marginStart="91dp"
+        android:layout_marginTop="208dp"
         android:text="TextView" />
 
     <EditText
@@ -121,32 +111,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="173dp"
-        android:layout_marginTop="261dp"
+        android:layout_marginStart="166dp"
+        android:layout_marginTop="528dp"
         android:ems="10"
         android:inputType="number" />
-
-    <EditText
-        android:id="@+id/editTextDate2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="362dp"
-        android:ems="10"
-        android:inputType="date" />
-
-    <EditText
-        android:id="@+id/editTextTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="413dp"
-        android:ems="10"
-        android:inputType="time" />
 
 </RelativeLayout>
 

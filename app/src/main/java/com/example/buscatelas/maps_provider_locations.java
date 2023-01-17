@@ -1,10 +1,17 @@
 package com.example.buscatelas;
 
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -17,6 +24,13 @@ import com.example.buscatelas.Utils.Authentication;
 import com.example.buscatelas.Utils.Database;
 import com.example.buscatelas.models.Client;
 import com.example.buscatelas.models.Request;
+import com.example.buscatelas.models.ServiceProvider;
+import com.example.buscatelas.ui.maps.MapsFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -64,7 +78,7 @@ public class maps_provider_locations extends Fragment {
         return fragment;
     }
 
-    public maps_provider_locations (String i) {
+    public maps_provider_locations(String i) {
         this.espc = i;
     }
 
@@ -82,7 +96,7 @@ public class maps_provider_locations extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps_provider_locations, container, false);
 
-        if(container!= null){
+        if (container != null) {
             container.removeAllViews();
         }
 
@@ -90,7 +104,7 @@ public class maps_provider_locations extends Fragment {
 
         Button passwordBtn = view.findViewById(R.id.button4);
 
-        passwordBtn.setOnClickListener(new View.OnClickListener(){
+        passwordBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity()
@@ -100,16 +114,26 @@ public class maps_provider_locations extends Fragment {
             }
         });
 
+        MapsFragment maps = new MapsFragment();
+
+        FragmentContainerView mapsContainer = view.findViewById(R.id.mapsContainer);
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.mapsContainer, maps);
+
+        for (ServiceProvider sp : databs.findProvidersWithSkill(espc)) {
+            maps.addUserMarker(sp.getId(), sp.getLocation());
+        }
 
         closeButton = view.findViewById(R.id.buttonpopup);
         closeButton.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v){
+            public void onClick(View v) {
                 builder = new AlertDialog.Builder(getContext());
                 final EditText edittext = new EditText(getContext());
                 builder.setView(edittext);
 
-                builder.setMessage("Descriçao")
+                builder.setMessage("Descriçao do pedido")
                         .setCancelable(false)
                         .setPositiveButton("Search", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -117,8 +141,13 @@ public class maps_provider_locations extends Fragment {
                                 Authentication firebaseAuth = new Authentication(getActivity());
                                 FirebaseUser client = firebaseAuth.getCurrentUser();
                                 Client cli = databs.getClientById(client.getUid());
-                                request = new Request(cli,descript);
+                                request = new Request(cli, descript, espc);
                                 databs.pushRequest(request, cli.getId());
+
+                                FragmentTransaction fragmentTransaction = getActivity()
+                                        .getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new Waiting_for_response());
+                                fragmentTransaction.commit();
 
                             }
                         })
@@ -134,5 +163,26 @@ public class maps_provider_locations extends Fragment {
         });
 
         return view;
+    }
+
+    public LatLng getUserLocation() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        Task<Location> task = null;
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            task = fusedLocationClient.getLastLocation();
+        }
+
+        final LatLng[] loca = {null};
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    loca[0] = latLng;
+                }
+            }
+        });
+        return loca[0];
+
     }
 }

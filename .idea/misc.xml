@@ -3,9 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/FCUL/MESTRADO/OSEMESTRE/ComputacaoMovel/Buscatelas/app/src/main/res/layout/activity_client.xml" value="0.20520833333333333" />
-        <entry key="..\:/FCUL/MESTRADO/OSEMESTRE/ComputacaoMovel/Buscatelas/app/src/main/res/layout/activity_provider.xml" value="0.20520833333333333" />
-        <entry key="..\:/FCUL/MESTRADO/OSEMESTRE/ComputacaoMovel/Buscatelas/app/src/main/res/layout/fragment_maps.xml" value="0.20520833333333333" />
+        <entry key="..\:/FCUL/MESTRADO/OSEMESTRE/ComputacaoMovel/Buscatelas/app/src/main/res/layout/fragment_maps_percurso_client.xml" value="0.35" />
+        <entry key="..\:/FCUL/MESTRADO/OSEMESTRE/ComputacaoMovel/Buscatelas/app/src/main/res/layout/fragment_maps_provider_locations.xml" value="0.20520833333333333" />
       </map>
     </option>
   </component>

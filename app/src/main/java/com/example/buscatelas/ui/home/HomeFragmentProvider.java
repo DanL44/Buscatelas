@@ -21,6 +21,8 @@ import com.example.buscatelas.Utils.Database;
 import com.example.buscatelas.databinding.FragmentHomeBinding;
 import com.example.buscatelas.maps_provider_locations;
 import com.example.buscatelas.models.Client;
+import com.example.buscatelas.models.Request;
+import com.example.buscatelas.models.ServiceProvider;
 import com.example.buscatelas.ui.worker.Aceitar_Pedido_worker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +44,7 @@ public class HomeFragmentProvider extends Fragment {
 
     private Database databs;
 
-    private Client currentUser;
+    private ServiceProvider currentUser;
     private FirebaseUser currentFBUser;
 
     ListView lv;
@@ -70,8 +72,6 @@ public class HomeFragmentProvider extends Fragment {
         System.out.println("Firebase User ID:" + currentFBUser.getUid());
         getUser(root);
 
-
-
         return root;
     }
 
@@ -86,7 +86,7 @@ public class HomeFragmentProvider extends Fragment {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = databs.getClientById(currentFBUser.getUid());
+                currentUser = databs.getServiceProviderById(currentFBUser.getUid());
                 System.out.println("Current User" + currentUser);
                 setupUI(root);
             }
@@ -110,11 +110,13 @@ public class HomeFragmentProvider extends Fragment {
         al = new ArrayList<String>();
         aa = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_activated_1,al);
         lv.setAdapter(aa);
-        al.add("pedidos");
-        al.add("pedidos");
-        al.add("pedidos");
 
+        for(String s: currentUser.getSkills()){
+            for(Request r: databs.getRequests(s)){
+                al.add(r.getSpecialization() + r.getDescription() + r.getClient().getName());
 
+            }
+        }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

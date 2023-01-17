@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.buscatelas.R;
@@ -69,6 +70,16 @@ public class Aceitar_Pedido_worker extends Fragment {
         if(container!= null){
             container.removeAllViews();
         }
+
+
+        //ir buscar o cliente pelo id do serviço
+        TextView textView = v.findViewById(R.id.textView9);
+        textView.setText("nome cli");
+        TextView textView1 = v.findViewById(R.id.textView10);
+        textView.setText("tipo serviço");
+        TextView textView2 = v.findViewById(R.id.textView16);
+        textView.setText("descriçao");
+
         Button selecionarvolta = v.findViewById(R.id.volta);
 
         selecionarvolta.setOnClickListener(new View.OnClickListener() {
