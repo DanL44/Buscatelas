@@ -65,9 +65,6 @@ public class ProviderActivity extends AppCompatActivity {
         ServiceProvider provider = getServiceProviderById(auth.getCurrentUser().getUid());
         System.out.println(provider);
 
-
-
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -113,6 +110,8 @@ public class ProviderActivity extends AppCompatActivity {
         final ServiceProvider[] serviceProvider = {null};
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentProvider = (dataSnapshot.getValue(ServiceProvider.class));
@@ -122,8 +121,7 @@ public class ProviderActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("return: " + serviceProvider[0]);
-                System.out.println("Error retrieving object: " + databaseError.getMessage());
+
             }
         });
         try {

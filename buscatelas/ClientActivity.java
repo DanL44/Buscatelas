@@ -46,7 +46,6 @@ public class ClientActivity extends AppCompatActivity {
     private Database database;
     private FirebaseAuth auth;
     private ActivityClientBinding binding;
-    private Client currentClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,7 @@ public class ClientActivity extends AppCompatActivity {
         database = app.getDatabase();
         binding = ActivityClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Client client = database.getClientById(auth.getCurrentUser().getUid());
 
 
 
@@ -112,7 +112,6 @@ public class ClientActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 client[0] = dataSnapshot.getValue(Client.class);
                 client[0].setLocation(getUserLocation());
-                currentClient = client[0];
                 database.pushClient(client[0], auth.getCurrentUser().getUid());
             }
 

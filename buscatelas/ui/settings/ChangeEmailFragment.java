@@ -102,8 +102,8 @@ public class ChangeEmailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                EditText oldEmailEdit = root.findViewById(R.id.oldEmailEdit);
-                EditText newEmailEdit = root.findViewById(R.id.newEmailEdit);
+                EditText oldEmailEdit = root.findViewById(R.id.newEmailEdit);
+                EditText newEmailEdit = root.findViewById(R.id.editTextTextPassword);
 
                 String oldEmail = oldEmailEdit.getText().toString().trim();
                 String newEmail = newEmailEdit.getText().toString().trim();

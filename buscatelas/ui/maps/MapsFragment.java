@@ -48,14 +48,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         Criteria criteria = new Criteria();
         locationProvider = locationManager.getBestProvider(criteria, false);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.mapView);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
         return rootView;
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

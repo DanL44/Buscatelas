@@ -52,11 +52,7 @@ public class Database {
     public boolean isProvider(String id){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("providers");
         final boolean[] isProvider = {false};
-        System.out.println("return: ");
-        System.out.println("return: ");
-        System.out.println("return: ");
-        System.out.println("return: ");
-        System.out.println("return: ");
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -154,11 +150,9 @@ public class Database {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot providerSnapshot : dataSnapshot.getChildren()) {
                     ServiceProvider provider = providerSnapshot.getValue(ServiceProvider.class);
-                    System.out.println("provider provider" + provider.getSkills());
-                    providers.add(provider);
-                    //if (provider.getSkills().contains(skill)) {
-
-                    //}
+                    if (provider.getSkills().contains(skill)) {
+                        providers.add(provider);
+                    }
                 }
             }
 

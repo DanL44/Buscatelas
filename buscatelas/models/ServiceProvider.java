@@ -1,6 +1,5 @@
 package com.example.buscatelas.models;
 
-import android.app.Service;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -23,10 +22,6 @@ public class ServiceProvider {
     private LatLng location;
 
 
-
-    public ServiceProvider(){
-
-    }
     public ServiceProvider(String name, String email, String phoneNumber){
         this.name = name;
         this.email = email;

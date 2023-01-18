@@ -98,8 +98,8 @@ public class ChangePhoneFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                EditText oldPhoneEdit = root.findViewById(R.id.oldPhoneEdit);
-                EditText newPhoneEdit = root.findViewById(R.id.newPhoneEdit);
+                EditText oldPhoneEdit = root.findViewById(R.id.newPhoneEdit);
+                EditText newPhoneEdit = root.findViewById(R.id.editTextTextPassword2);
 
                 String oldPhone = oldPhoneEdit.getText().toString().trim();
                 String newPhone = newPhoneEdit.getText().toString().trim();
@@ -108,8 +108,6 @@ public class ChangePhoneFragment extends Fragment {
 
             }
         });
-
-
 
 
         return root;

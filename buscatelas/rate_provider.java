@@ -82,7 +82,7 @@ public class rate_provider extends Fragment {
 
         databs = new Database();
 
-        Button save = view.findViewById(R.id.saveBtn);
+        Button save = view.findViewById(R.id.button7);
 
         save.setOnClickListener(new View.OnClickListener() {
 
