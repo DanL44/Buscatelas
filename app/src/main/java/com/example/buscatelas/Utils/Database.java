@@ -32,7 +32,7 @@ public class Database {
     }
 
     public void pushServiceProvider(ServiceProvider serviceProvider, String id) {
-        databaseReference.child("requests").child(id).push().setValue(serviceProvider);
+        databaseReference.child("providers").child(id).push().setValue(serviceProvider);
         serviceProvider.setId(id);
     }
 
@@ -49,15 +49,20 @@ public class Database {
         databaseReference.child("requests").child(id).setValue(request);
     }
 
-    public boolean isProvider(String id){
+    public boolean isProvider(String id, final OnGetDataListener listener){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("providers");
-        final boolean[] isProvider = {false};
+        final boolean[] isProvider = null;
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(id)) {
+                    System.out.println("----------------------------------------1: ");
+
                     isProvider[0] = true;
+
                 } else {
+                    System.out.println("----------------------------------------2: ");
                     isProvider[0] = false;
                 }
             }
@@ -67,18 +72,37 @@ public class Database {
                 System.out.println("Error checking for ID: " + databaseError.getMessage());
             }
         });
+
+        System.out.println("----------------------------------------ola: " +isProvider[0]);
         return isProvider[0];
     }
 
+    public void mReadDataOnce(String id, final OnGetDataListener listener) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/providers");
+        final boolean[] isProvider = null;
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listener.onSuccess(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error checking for ID: " + databaseError.getMessage());
+                listener.onFailed(databaseError);
+            }
+        });
+    }
 
     public Client getClientById(String id){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("clients").child(id);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/providers");
         final Client[] client = {null};
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 client[0] = dataSnapshot.getValue(Client.class);
+
             }
 
             @Override
@@ -91,20 +115,24 @@ public class Database {
     }
 
     public ServiceProvider getServiceProviderById(String id){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("clients").child(id);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("providers").child(id);
         final ServiceProvider[] serviceProvider = {null};
+        System.out.println("actual id inside" + id + ref);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                serviceProvider [0] = dataSnapshot.getValue(ServiceProvider.class);
+                serviceProvider[0] = dataSnapshot.getValue(ServiceProvider.class);
+                System.out.println("return inside: " + serviceProvider[0]);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                System.out.println("return: " + serviceProvider[0]);
                 System.out.println("Error retrieving object: " + databaseError.getMessage());
             }
         });
+        System.out.println("aaa" + serviceProvider[0]);
         return serviceProvider [0];
     }
 
@@ -145,9 +173,11 @@ public class Database {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot providerSnapshot : dataSnapshot.getChildren()) {
                     ServiceProvider provider = providerSnapshot.getValue(ServiceProvider.class);
-                    if (provider.getSkills().contains(skill)) {
-                        providers.add(provider);
-                    }
+                    System.out.println("provider provider" + provider.getSkills());
+                    providers.add(provider);
+                    //if (provider.getSkills().contains(skill)) {
+
+                    //}
                 }
             }
 
@@ -158,6 +188,8 @@ public class Database {
         });
         return providers;
     }
+
+
 
 
 

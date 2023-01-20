@@ -2,11 +2,14 @@ package com.example.buscatelas;
 
 
 import android.app.AlertDialog;
+import android.app.usage.NetworkStats;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -28,10 +31,19 @@ import com.example.buscatelas.models.ServiceProvider;
 import com.example.buscatelas.ui.maps.MapsFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.Executor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,8 +63,10 @@ public class maps_provider_locations extends Fragment {
     private Button closeButton;
     private AlertDialog.Builder builder;
     private Request request;
-    private Database databs;
     private String espc;
+    private Database databs;
+    private Client currentClient;
+    private Authentication mauth;
 
 
     public maps_provider_locations() {
@@ -82,6 +96,11 @@ public class maps_provider_locations extends Fragment {
         this.espc = i;
     }
 
+    public maps_provider_locations(String i, Client cli) {
+        this.espc = i;
+        this.currentClient = cli;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,17 +121,7 @@ public class maps_provider_locations extends Fragment {
 
         databs = new Database();
 
-        Button passwordBtn = view.findViewById(R.id.button4);
 
-        passwordBtn.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                FragmentTransaction fragmentTransaction = getActivity()
-                        .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new maps_percurso_client());
-                fragmentTransaction.commit();
-            }
-        });
 
         MapsFragment maps = new MapsFragment();
 
@@ -120,6 +129,8 @@ public class maps_provider_locations extends Fragment {
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.mapsContainer, maps);
+        //maps.onMapReady();
+        //maps.allProviders();
 
         for (ServiceProvider sp : databs.findProvidersWithSkill(espc)) {
             maps.addUserMarker(sp.getId(), sp.getLocation());
@@ -138,11 +149,11 @@ public class maps_provider_locations extends Fragment {
                         .setPositiveButton("Search", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 String descript = edittext.getText().toString();
-                                Authentication firebaseAuth = new Authentication(getActivity());
-                                FirebaseUser client = firebaseAuth.getCurrentUser();
-                                Client cli = databs.getClientById(client.getUid());
-                                request = new Request(cli, descript, espc);
-                                databs.pushRequest(request, cli.getId());
+                                //Authentication firebaseAuth = new Authentication(getActivity());
+                                //FirebaseUser client = firebaseAuth.getCurrentUser();
+                                //Client cli = getClientById(client.getUid());
+                                request = new Request(currentClient, descript, espc);
+                                //databs.pushRequest(request, currentClient.getId());
 
                                 FragmentTransaction fragmentTransaction = getActivity()
                                         .getSupportFragmentManager().beginTransaction();
@@ -184,5 +195,56 @@ public class maps_provider_locations extends Fragment {
         });
         return loca[0];
 
+    }
+
+    public Client getClientById(String id) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(id);
+        final Client[] client = {null};
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                client[0] = dataSnapshot.getValue(Client.class);
+                client[0].setLocation(getUserLocation());
+                currentClient = client[0];
+                databs.pushClient(client[0], mauth.getCurrentUser().getUid());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error retrieving object: " + databaseError.getMessage());
+            }
+        });
+        return client[0];
+
+    }
+
+    public void openMap() {
+        FusedLocationProviderClient fusedLocationClient;
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener((Executor) this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            Uri gmmIntentUri = Uri.parse("geo:" + location.getLatitude() + "," + location.getLongitude());
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+                            if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(mapIntent);
+                            }
+                        }
+                    }
+                });
     }
 }

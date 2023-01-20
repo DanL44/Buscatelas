@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -12,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.buscatelas.Utils.Database;
+import com.example.buscatelas.ui.maps.MapsFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,16 +81,20 @@ public class mapa_percurso_provider extends Fragment {
 
         databs = new Database();
 
+        MapsFragment maps = new MapsFragment();
+
+        FragmentContainerView mapsContainer = view.findViewById(R.id.mapsContainer2);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        //transaction.add(R.id.mapsContainer, maps);
+
         closeButton = view.findViewById(R.id.button5);
         closeButton.setOnClickListener(new View.OnClickListener() {
 
 
             public void onClick(View v){
                 builder = new AlertDialog.Builder(getContext());
-                final EditText edittext = new EditText(getContext());
-                builder.setView(edittext);
 
-                builder.setMessage("Detalhes cliente")
+                builder.setMessage("Aníbal Vidreio    931245422")
                         //adicionar os dados do client
                         .setCancelable(false)
                         .setPositiveButton("", new DialogInterface.OnClickListener() {
@@ -106,7 +113,7 @@ public class mapa_percurso_provider extends Fragment {
             }
         });
 
-        Button selecionaraceitar = view.findViewById(R.id.button6);
+        ImageButton selecionaraceitar = view.findViewById(R.id.button6);
 
         selecionaraceitar.setOnClickListener(new View.OnClickListener() {
             @Override

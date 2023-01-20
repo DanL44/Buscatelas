@@ -1,21 +1,31 @@
 package com.example.buscatelas.ui.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.buscatelas.ClientActivity;
+import com.example.buscatelas.Login;
+import com.example.buscatelas.ProviderActivity;
 import com.example.buscatelas.R;
 import com.example.buscatelas.databinding.FragmentChangeEmailBinding;
 import com.example.buscatelas.models.Client;
+import com.example.buscatelas.ui.Client.Lista_Completos_Servicos_client;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -89,38 +99,69 @@ public class ChangeEmailFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        currentFBUser = mAuth.getCurrentUser();
-        System.out.println("current user id: " + currentFBUser.getUid());
+        //currentFBUser = mAuth.getCurrentUser();
 
-        getUser();
+        //getUser();
 
         Button changeEmailBtn = root.findViewById(R.id.emailChangeBtn);
-
-
 
         changeEmailBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                EditText oldEmailEdit = root.findViewById(R.id.oldEmailEdit);
-                EditText newEmailEdit = root.findViewById(R.id.newEmailEdit);
 
+                EditText oldEmailEdit = root.findViewById(R.id.newEmailEdit);
+                EditText passwordT = root.findViewById(R.id.editTextTextPassword);
+
+                ImageButton show = root.findViewById(R.id.imageButton5);
+                show.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(passwordT.getTransformationMethod() == null) {
+                            passwordT.setTransformationMethod(new PasswordTransformationMethod());
+                        } else
+                            passwordT.setTransformationMethod(null);
+                    }
+                });
                 String oldEmail = oldEmailEdit.getText().toString().trim();
-                String newEmail = newEmailEdit.getText().toString().trim();
+                String pass = passwordT.getText().toString().trim();
 
-                changeEmail(oldEmail, newEmail);
+                //changeEmail(oldEmail, pass);
 
+                if (isFieldEmpty(oldEmail) || isFieldEmpty(pass)) {
+                    Toast.makeText(getContext(), "Fields are empty",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    mAuth.signInWithEmailAndPassword(oldEmail, pass)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "Success!",
+                                                Toast.LENGTH_SHORT).show();
+                                        FragmentTransaction fragmentTransaction = getActivity()
+                                                .getSupportFragmentManager().beginTransaction();
+                                        fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new SettingsFragment());
+                                        fragmentTransaction.commit();
+                                    }else {
+                                        Toast.makeText(getContext(), "Fail!",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
             }
-        });
-
-
-
-
+            });
 
         return root;
+
     }
 
+    private boolean isFieldEmpty(String text){
+        return text.length() == 0;
+
+    }
 
     private void getUser(){
         DatabaseReference uidRef = mDatabase.child("users").child(currentFBUser.getUid());

@@ -3,10 +3,16 @@ package com.example.buscatelas;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
+
+import com.example.buscatelas.ui.home.HomeFragment;
+import com.example.buscatelas.ui.home.HomeFragmentProvider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +64,25 @@ public class pag_final_request extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pag_final_request, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_pag_final_request, container, false);
+
+        if (container != null) {
+            container.removeAllViews();
+        }
+
+        Button passwordBtn = view.findViewById(R.id.button11);
+        RatingBar ratingBar = view.findViewById(R.id.ratingBar2);
+        ratingBar.setRating(3.8f);
+        passwordBtn.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity()
+                        .getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_provider, new HomeFragmentProvider());
+                fragmentTransaction.commit();
+            }
+        });
+        return view;
     }
 }

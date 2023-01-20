@@ -1,17 +1,24 @@
 package com.example.buscatelas.ui.settings;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.buscatelas.Login;
 import com.example.buscatelas.R;
+import com.example.buscatelas.Register;
 import com.example.buscatelas.databinding.FragmentSettingsBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,11 +59,33 @@ public class SettingsFragment extends Fragment {
         if(container!= null){
             container.removeAllViews();
         }
+        ConstraintLayout layout;
 
         Button changeEmailBtn = root.findViewById(R.id.changeEmailBtn);
         Button changePasswordBtn = root.findViewById(R.id.changePassBtn);
         Button changePhoneBtn = root.findViewById(R.id.changePhoneBtn);
 
+        Button logout = root.findViewById(R.id.buttonl1);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), Login.class));
+            }
+        });
+
+        Switch darkswitch = root.findViewById(R.id.switch1);
+        View seting = this.getView();
+        darkswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    binding.getRoot().setBackgroundResource(R.color.dark);
+                    // darkswitch.setBackgroundResource(R.color.dark);
+                } else{
+                    binding.getRoot().setBackgroundResource(R.color.white);
+                }
+            }
+        });
 
         changeEmailBtn.setOnClickListener(new View.OnClickListener() {
             @Override

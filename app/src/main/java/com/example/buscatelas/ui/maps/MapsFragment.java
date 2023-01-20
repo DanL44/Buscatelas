@@ -1,8 +1,11 @@
 package com.example.buscatelas.ui.maps;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,7 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.buscatelas.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,8 +31,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,7 +49,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private String locationProvider;
     private String userId;
     private boolean isTracking;
+    private  FusedLocationProviderClient fusedLocationClient;
+    private GoogleMap googleMap;
+    private LatLng deviceLocation;
 
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
@@ -48,20 +62,111 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         Criteria criteria = new Criteria();
         locationProvider = locationManager.getBestProvider(criteria, false);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.mapView);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        if (location != null) {
+                            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                                public void onMapReady(GoogleMap googleMap) {
+                                    deviceLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                    googleMap.addMarker(new MarkerOptions().position(deviceLocation).title("Device Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(deviceLocation));
+                                    List<LatLng> locations = new ArrayList<>();
+                                    locations.add(new LatLng(39.006613, -9.352222));
+
+                                    for (int i = 0; i < locations.size(); i++) {
+                                        googleMap.addMarker(new MarkerOptions().position(locations.get(i)).title("Provider"));
+                                    }
+
+                                  //  public static CameraUpdate newLatLngZoom (location.getLatitude(),location.getLongitude(), float zoom)
+
+                                    googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                                        @Override
+                                        public void onCameraIdle() {
+                                            // Logic to handle camera idle event
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    }
+                });
         return rootView;
     }
 
+
+    public void allProviders() {
+
+        List<LatLng> locations = new ArrayList<>();
+        locations.add(new LatLng(39.390610, -9.0766638));
+        locations.add(new LatLng(40.730610, -73.935242));
+        locations.add(new LatLng(39.006613, -9.352222));
+
+        for (int i = 0; i < locations.size(); i++) {
+           // googleMap.addMarker(new MarkerOptions().position(locations.get(i)).title("Provider"));
+        }
+
+    }
+    public void oneProv() {
+
+        List<LatLng> locations = new ArrayList<>();
+        locations.add(new LatLng(39.006613, -9.352222));
+
+        for (int i = 0; i < locations.size(); i++) {
+            //googleMap.addMarker(new MarkerOptions().position(locations.get(i)).title("Provider"));
+        }
+
+
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mMap.addMarker((new MarkerOptions().position(latLng)));
+            }
+        });
+
     }
 
     public void addUserMarker(String userId, LatLng location) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
         this.userId = userId;
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(location)

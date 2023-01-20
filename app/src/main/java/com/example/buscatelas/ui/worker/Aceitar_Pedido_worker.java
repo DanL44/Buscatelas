@@ -73,12 +73,11 @@ public class Aceitar_Pedido_worker extends Fragment {
 
 
         //ir buscar o cliente pelo id do serviço
-        TextView textView = v.findViewById(R.id.textView9);
-        textView.setText("nome cli");
-        TextView textView1 = v.findViewById(R.id.textView10);
-        textView.setText("tipo serviço");
-        TextView textView2 = v.findViewById(R.id.textView16);
-        textView.setText("descriçao");
+      //  TextView textView = v.findViewById(R.id.textView9);
+
+        //textView.setText("João Neves");
+        //TextView textView1 = v.findViewById(R.id.textView10);
+        //textView.setText("Bursted Pipes on the hall bathroom");
 
         Button selecionarvolta = v.findViewById(R.id.volta);
 

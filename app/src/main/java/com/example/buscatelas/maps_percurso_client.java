@@ -5,14 +5,21 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.buscatelas.Utils.Database;
+import com.example.buscatelas.models.ServiceProvider;
+import com.example.buscatelas.ui.Client.Lista_Completos_Servicos_client;
+import com.example.buscatelas.ui.home.HomeFragment;
+import com.example.buscatelas.ui.maps.MapsFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,11 +88,16 @@ public class maps_percurso_client extends Fragment {
         closeButton.setOnClickListener(new View.OnClickListener() {
 
 
+        MapsFragment maps = new MapsFragment();
+
+        FragmentContainerView mapsContainer = view.findViewById(R.id.mapsContainer2);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        //transaction.add(R.id.mapsContainer, maps);
 
             public void onClick(View v){
                 builder = new AlertDialog.Builder(getContext());
 
-                builder.setMessage("Detalhes Provider")
+                builder.setMessage("Henrique da Silva - Electric Job")
                         //adicionar os dados do provider
                         .setCancelable(false)
                         .setPositiveButton("", new DialogInterface.OnClickListener() {
@@ -103,6 +115,63 @@ public class maps_percurso_client extends Fragment {
 
             }
         });
+
+        closeButton = view.findViewById(R.id.button3);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+
+
+            MapsFragment maps = new MapsFragment();
+
+            FragmentContainerView mapsContainer = view.findViewById(R.id.mapsContainer2);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            //transaction.add(R.id.mapsContainer, maps);
+
+            public void onClick(View v){
+                builder = new AlertDialog.Builder(getContext());
+
+                builder.setMessage("João dos Silvas - Electric Job - 3.5 Avg Rating")
+                        //adicionar os dados do provider
+                        .setCancelable(false)
+                        .setPositiveButton("", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        })
+                        .setNegativeButton("voltar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Perform some action on click of NO button
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            }
+        });
+
+        Button passwordBtn = view.findViewById(R.id.button2);
+
+        passwordBtn.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity()
+                        .getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new HomeFragment());
+                fragmentTransaction.commit();
+            }
+        });
+
+        ImageButton end = view.findViewById(R.id.imageButton7);
+
+        end.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity()
+                        .getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new rate_provider());
+                fragmentTransaction.commit();
+            }
+        });
+
         return view;
     }
 }

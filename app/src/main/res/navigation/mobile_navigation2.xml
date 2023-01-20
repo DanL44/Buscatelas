@@ -6,12 +6,6 @@
     app:startDestination="@id/homeFragmentProvider">
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.buscatelas.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.buscatelas.ui.settings.SettingsFragment"
         android:label="Settings"
@@ -21,4 +15,9 @@
         android:name="com.example.buscatelas.ui.home.HomeFragmentProvider"
         android:label="fragment_home_provider"
         tools:layout="@layout/fragment_home_provider" />
+    <fragment
+        android:id="@+id/dashboardFragmentProvider"
+        android:name="com.example.buscatelas.ui.dashboard.DashboardFragmentProvider"
+        android:label="fragment_dashboard_provider"
+        tools:layout="@layout/fragment_dashboard_provider" />
 </navigation>

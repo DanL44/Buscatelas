@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
         databs = new Database();
 
         currentFBUser = mAuth.getCurrentUser();
-        System.out.println("Firebase User ID:" + currentFBUser.getUid());
+        System.out.println("--------------------------Firebase User ID:" + currentFBUser.getUid());
         getUser(root);
 
 
@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = databs.getClientById(currentFBUser.getUid());
-                System.out.println("Current User" + currentUser);
+                System.out.println("------------------------------Current User" + currentUser);
                 setupUI(root);
             }
 
@@ -110,12 +110,11 @@ public class HomeFragment extends Fragment {
         lv.setAdapter(aa);
 
         al.add("Eletric Job");
-        al.add("Plumber");
+        al.add("Plumbing");
         al.add("Home repairs");
         al.add("Home maintenance");
         al.add("Home installations");
         al.add("Painting");
-        al.add("Senior Home Upgrades");
         al.add("General Yard Maintenance");
 
 
@@ -127,7 +126,7 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 if(position == 0) {
-                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("elect"));
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("elect",currentUser));
                 }else if (position == 1){
                     transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("plumber"));
                 }else if (position == 2){
@@ -137,7 +136,7 @@ public class HomeFragment extends Fragment {
                 }else if (position == 4){
                     transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("installations"));
                 }else if (position == 5){
-                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("Painting"));
+                    transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("painting"));
                 }else if (position == 6){
                     transaction.replace(R.id.nav_host_fragment_activity_client, new maps_provider_locations("senior"));
                 }else if (position == 7){

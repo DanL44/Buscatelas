@@ -1,5 +1,6 @@
 package com.example.buscatelas.models;
 
+import android.app.Service;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -15,18 +16,25 @@ public class ServiceProvider {
     private double balance;
     private ArrayList<String> skills;
     private boolean isOccupied;
+    private float rating;
     private String id;
     private ArrayList<Request> pastRequests;
     private String token;
     private LatLng location;
 
 
+
+    public ServiceProvider(){
+
+    }
     public ServiceProvider(String name, String email, String phoneNumber){
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.balance = 0;
+        this.rating = 0;
         this.isOccupied = false;
+        skills = new ArrayList<>();
         pastRequests = new ArrayList<>();
     }
 
@@ -116,5 +124,13 @@ public class ServiceProvider {
 
     public void setLocation(LatLng location) {
         location = location;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

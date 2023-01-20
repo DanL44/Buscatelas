@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 public class Register extends AppCompatActivity {
 
-
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private Database databs;
@@ -53,7 +52,6 @@ public class Register extends AppCompatActivity {
 
         ab.setDisplayHomeAsUpEnabled(true);
 
-
         Button registerButton = findViewById(R.id.registerSuccessBtn);
         EditText emailT = findViewById(R.id.registerEmail);
         EditText passwordT = findViewById(R.id.passwordRegister);
@@ -61,8 +59,6 @@ public class Register extends AppCompatActivity {
         EditText numberT = findViewById(R.id.editTextPhone);
         EditText hourlyRateT = findViewById(R.id.hourlyRate);
         TextView hourlyText = findViewById(R.id.textView7);
-
-
 
         Switch s = findViewById(R.id.workerSwitch);
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -92,12 +88,7 @@ public class Register extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
-
 
     //Add transições e merdas assim, fazer retrieve do user tbm e adicionar firebase
     private void registerUser(String email, String password, String name, String number, String hourlyRate, boolean workerSwitch){
@@ -130,9 +121,9 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, "Empty Name",
                                         Toast.LENGTH_SHORT).show();
 
-                            } else if (isFieldEmpty(hourlyRate) && workerSwitch) {
-                                Toast.makeText(Register.this, "Empty Hourly Rate",
-                                        Toast.LENGTH_SHORT).show();
+                            //} else if (isFieldEmpty(hourlyRate) && workerSwitch) {
+                             //   Toast.makeText(Register.this, "Empty Hourly Rate",
+                              //          Toast.LENGTH_SHORT).show();
 
                             } else if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
@@ -151,6 +142,11 @@ public class Register extends AppCompatActivity {
                                                     } else {
                                                         // registration failed
                                                         Toast.makeText(Register.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                                                        ServiceProvider serviceProvider = new ServiceProvider(name, email, number);
+                                                        currentUser = mAuth.getCurrentUser();
+                                                        String userId = currentUser.getUid();
+                                                        databs.pushServiceProvider(serviceProvider, userId);
+                                                        System.out.println(task.getException());
                                                     }
                                                 }
                                             });
@@ -169,8 +165,13 @@ public class Register extends AppCompatActivity {
                                                         databs.pushClient(client, userId);
 
                                                     } else {
-                                                        // registration failed
-                                                        Toast.makeText(Register.this, "Registration Failed_", Toast.LENGTH_SHORT).show();
+                                                        // registration successful
+                                                        Toast.makeText(Register.this, "Registration Successful_", Toast.LENGTH_SHORT).show();
+                                                        currentUser = mAuth.getCurrentUser();
+                                                        String userId = currentUser.getUid();
+                                                        Client client = new Client(name, email, number);
+                                                        databs.pushClient(client, userId);
+                                                        System.out.println(task.getException());
                                                     }
                                                 }
                                             });
@@ -182,7 +183,6 @@ public class Register extends AppCompatActivity {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(Register.this, "User already registered ",
                                         Toast.LENGTH_SHORT).show();
-
                                 System.out.println(task.getException().toString());
                             }
                         }

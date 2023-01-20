@@ -7,6 +7,7 @@ import com.example.buscatelas.Utils.Database;
 import com.example.buscatelas.models.Client;
 import com.example.buscatelas.models.Request;
 import com.example.buscatelas.models.ServiceProvider;
+import com.google.firebase.auth.FirebaseAuth;
 import com.onesignal.OneSignal;
 
 public class MyApplication  extends Application {
@@ -14,7 +15,7 @@ public class MyApplication  extends Application {
     private Client currentClient;
     private ServiceProvider currentProvider;
     private Request currentRequest;
-    private Authentication auth;
+    private FirebaseAuth auth;
     private Database database;
 
     public Client getCurrentClient() {
@@ -57,11 +58,11 @@ public class MyApplication  extends Application {
         OneSignal.promptForPushNotifications();
     }
 
-    public Authentication getAuth() {
+    public FirebaseAuth getAuth() {
         return auth;
     }
 
-    public void setAuth(Authentication auth) {
+    public void setAuth(FirebaseAuth auth) {
         this.auth = auth;
     }
 

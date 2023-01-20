@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.buscatelas.R;
+import com.example.buscatelas.ui.Client.Lista_Completos_Servicos_client;
 import com.example.buscatelas.ui.worker.Editar_sevico_worker;
 import com.example.buscatelas.ui.worker.lista_servicos_worker;
 
@@ -77,7 +78,7 @@ public class ServicoCompleto extends Fragment {
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new lista_servicos_worker());
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new Lista_Completos_Servicos_client());
                 fragmentTransaction.commit();
             }
         });

@@ -15,6 +15,9 @@ public class Client {
     private ArrayList<Request> pastRequests;
     private LatLng location;
 
+    public Client(){
+
+    }
     public Client(String name, String email, String phoneNumber){
         this.name = name;
         this.email = email;

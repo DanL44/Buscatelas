@@ -4,51 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment"
-    android:fillViewport = "True">
+    android:fillViewport="True"
+    tools:context=".ui.home.HomeFragment">
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="410dp"
-            android:layout_height="75dp"
-            android:src="@drawable/buscates_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="413dp"
+        android:layout_height="160dp"
+        android:src="@drawable/buscates_icon"
+        app:layout_constraintBottom_toTopOf="@+id/profileTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/profileTxt"
-            android:layout_width="199dp"
-            android:layout_height="26dp"
-            android:text="Profile:"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3"
-            app:layout_constraintVertical_bias="0.0" />
+    <TextView
+        android:id="@+id/profileTxt"
+        android:layout_width="294dp"
+        android:layout_height="55dp"
+        android:shadowColor="#73716f"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:text="Available Services:"
+        android:textColor="#ffc445"
+        android:textColorLink="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toTopOf="@+id/lv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ListView
         android:id="@+id/lv"
-        android:layout_width="267dp"
-        android:layout_height="353dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="306dp"
+        android:layout_height="320dp"
+        app:layout_constraintBottom_toTopOf="@+id/pedidos"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/profileTxt">
 
     </ListView>
 
     <Button
         android:id="@+id/pedidos"
-        android:layout_width="171dp"
-        android:layout_height="57dp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginBottom="72dp"
-        android:text="Pedidos passados"
-        app:backgroundTint="#FF9800"
+        android:layout_width="278dp"
+        android:layout_height="61dp"
+        android:text="Request History"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:backgroundTint="@color/main_variant"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/ic_baseline_checklist_24"
+        app:iconTint="@color/dark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,25 +18,38 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
-import com.example.buscatelas.Utils.Authentication;
 import com.example.buscatelas.Utils.Database;
+import com.example.buscatelas.Utils.OnGetDataListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity {
 
 
-    private Authentication mAuth;
+    private FirebaseAuth mAuth;
+    private MyApplication app;
+    
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private Database database;
+
+    private boolean bol;
+    private boolean prov;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -46,8 +59,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        mAuth = new Authentication(this);
-        Database database = new Database();
+        mAuth = FirebaseAuth.getInstance();
+        database = new Database();
 
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
@@ -78,7 +91,7 @@ public class Login extends AppCompatActivity {
         String email = emailText.getText().toString();
         EditText passwordT = findViewById(R.id.password);
         String password = passwordT.getText().toString().trim();
-
+        Switch s = findViewById(R.id.switch2);
 
 
         loginButton.setOnClickListener( new View.OnClickListener(){
@@ -86,8 +99,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
-                MyApplication app = (MyApplication) getApplication();
+
+                app = (MyApplication) getApplication();
                 app.setAuth(mAuth);
                 app.setDatabase(database);
 
@@ -98,56 +111,31 @@ public class Login extends AppCompatActivity {
                 EditText passwordT = findViewById(R.id.password);
 
                 String password = passwordT.getText().toString().trim();
+
+                //loginFunction("ola3@gmail.com", "olaola");
+
                 if (isFieldEmpty(email) || isFieldEmpty(password)) {
                     Toast.makeText(Login.this, "Fields are empty",
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
-                    while(mAuth.getCurrentUser() == null);
-                    startActivity(new Intent(Login.this, ProviderActivity.class));
+                    loginFunction(email, password);
 
                 }
 
             }
         });
 
-        Button client = findViewById(R.id.button);
-        client.setOnClickListener( new View.OnClickListener(){
-
+        ImageButton show = findViewById(R.id.imageButton2);
+        show.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
-                startActivity(new Intent(Login.this, ClientActivity.class));
-                Button loginButton = findViewById(R.id.loginButton);
-                EditText emailText = findViewById(R.id.emailAdress);
-
-                String email = emailText.getText().toString().trim();
-                EditText passwordT = findViewById(R.id.password);
-
-                String password = passwordT.getText().toString().trim();
-                if (isFieldEmpty(email) || isFieldEmpty(password)) {
-                    Toast.makeText(Login.this, "Fields are empty",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else{
-
-                    mAuth.loginWithEmailAndPassword("ola3@gmail.com", "olaola");
-                    startActivity(new Intent(Login.this, ClientActivity.class));
-                }
-
+                if(passwordT.getTransformationMethod() == null) {
+                    passwordT.setTransformationMethod(new PasswordTransformationMethod());
+                } else
+                    passwordT.setTransformationMethod(null);
             }
         });
-
-
-
-
-
-
-
-
-
-
 
 
         Button registerButton = findViewById(R.id.registerButton);
@@ -159,12 +147,82 @@ public class Login extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
+    private void loginFunction(String email, String password){
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            System.out.println("------------------------------" + user);
+                            Toast.makeText(Login.this, "Success!",
+                                    Toast.LENGTH_SHORT).show();
+
+                            //mCheckInforInServer(user.getUid());
+
+                            //bol = database.isProvider(user.getUid());
+                                if(((Switch) findViewById(R.id.switch2)).isChecked()){
+                                    //System.out.println("------------------------------ohpa" + user);
+                                    startActivity(new Intent(Login.this, ProviderActivity.class));
+                                }else{
+                                    //System.out.println("------------------------------aaaaaaa" + user);
+                                    //System.out.println("------------------------------444" + bol);
+                                    startActivity(new Intent(Login.this, ClientActivity.class));
+                                }
+
+                        }else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(Login.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            //System.out.println(task.getException());
+                        }
+                    }
+                });
+    }
 
     private boolean isFieldEmpty(String text){
         return text.length() == 0;
 
+    }
+
+    private void mCheckInforInServer(String id) {
+        new Database().mReadDataOnce(id, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                if (data.hasChild(id)) {
+                    System.out.println("----------------------------------------1: ");
+                    prov = true;
+                    bol = false;
+
+                } else {
+                    System.out.println("----------------------------------------2: ");
+                    prov = false;
+                    bol = false;
+
+                }
+            }
+
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                //DO SOME THING WHEN GET DATA FAILED HERE
+            }
+        });
+
+    }
+
+    public void setbool(Boolean bol){
+        this.bol = bol;
     }
 
     // Declare the launcher at the top of your Activity/Fragment:
@@ -194,6 +252,8 @@ public class Login extends AppCompatActivity {
             }
         }
     }
+
+
 
 
 

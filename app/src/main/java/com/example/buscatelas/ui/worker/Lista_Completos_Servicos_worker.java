@@ -82,8 +82,8 @@ public class Lista_Completos_Servicos_worker extends Fragment {
         aa = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_activated_1,al);
         lv.setAdapter(aa);
         al.add("Rui Mario- 23/10/22-16:30h");
-        al.add("Ambrosio- 23/10/22-16:30h");
-        al.add("Ambrosio- 23/1/22-16:30h");
+        al.add("Ambrosio- 23/09/22-16:30h");
+        al.add("Ambrosio- 23/08/22-16:30h");
         al.add("Ambrosio- 23/10/22-16:30h");
 
 
@@ -92,7 +92,7 @@ public class Lista_Completos_Servicos_worker extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction fragmentTransaction = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new ServicoCompleto());
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_provider, new ServicoCompleto());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

@@ -1,12 +1,23 @@
 package com.example.buscatelas;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.buscatelas.databinding.FragmentHomeBinding;
+import com.example.buscatelas.ui.home.HomeViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +34,8 @@ public class Waiting_for_response extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private HomeViewModel homeViewModel;
+    private FragmentHomeBinding binding;
 
     public Waiting_for_response() {
         // Required empty public constructor
@@ -58,7 +71,38 @@ public class Waiting_for_response extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_waiting_for_response, container, false);
+        View view = inflater.inflate(R.layout.fragment_waiting_for_response, container, false);
+
+        if(container!= null){
+            container.removeAllViews();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel_name";
+            String description = "channel_description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("channel_id", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(getActivity(), ClientActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("fragment", "specific_fragment");
+        intent.putExtras(bundle);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "channel_id")
+                .setSmallIcon(R.drawable.buscates_icon)
+                .setContentTitle("Client")
+                .setContentText("Your service was accepted")
+                .setContentIntent(pendingIntent);
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(1, builder.build());
+
+        return view;
     }
 }

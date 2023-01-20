@@ -1,12 +1,23 @@
 package com.example.buscatelas;
 
+import android.media.MediaMetadata;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
+
+import com.example.buscatelas.Utils.Database;
+import com.example.buscatelas.models.Request;
+import com.example.buscatelas.models.ServiceProvider;
+import com.example.buscatelas.ui.home.HomeFragment;
+
+import java.security.Provider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +34,8 @@ public class rate_provider extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Database databs;
+    private RatingBar ratingBar;
 
     public rate_provider() {
         // Required empty public constructor
@@ -58,7 +71,48 @@ public class rate_provider extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_rate_provider, container, false);
+        View view = inflater.inflate(R.layout.fragment_rate_provider, container, false);
+
+        if (container != null) {
+            container.removeAllViews();
+        }
+
+        MyApplication app = (MyApplication) getActivity().getApplication();
+        Request req = app.getCurrentRequest();
+
+        databs = new Database();
+
+        Button save = view.findViewById(R.id.button7);
+
+        save.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                ServiceProvider provider = app.getCurrentProvider();
+                int num = provider.getPastRequests().size();
+                float rat = provider.getRating()/num;
+                ratingBar = (RatingBar) view.findViewById(R.id.ratingBar3);
+                rat += ratingBar.getRating()/num;
+                provider.setRating(rat);
+
+                FragmentTransaction fragmentTransaction = getActivity()
+                        .getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new HomeFragment());
+                fragmentTransaction.commit();
+            }
+        });
+        //ServiceProvider prov = req.getServiceProvider();
+
+        Button passwordBtn = view.findViewById(R.id.button7);
+
+        passwordBtn.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity()
+                        .getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment_activity_client, new HomeFragment());
+                fragmentTransaction.commit();
+            }
+        });
+        return view;
     }
 }

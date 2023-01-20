@@ -21,6 +21,9 @@ public class Request {
     public boolean done;
     public String id;
 
+    public Request(){
+
+    }
     public Request(Client client, String description, String specialization){
         this.id = String.valueOf(UUID.randomUUID());
         this.client = client;

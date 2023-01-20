@@ -34,41 +34,60 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.buscatelas.databinding.ActivityClientBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ClientActivity extends AppCompatActivity {
 
     private Database database;
-    private Authentication auth;
+    private FirebaseAuth auth;
     private ActivityClientBinding binding;
+    private Client currentClient;
+    private MyApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
+
+
         requestWindowFeature(Window.FEATURE_NO_TITLE) ;
         this.getWindow().setFlags(WindowManager. LayoutParams. FLAG_FULLSCREEN, WindowManager.LayoutParams. FLAG_FULLSCREEN);
         getSupportActionBar().hide();
-        MyApplication app = (MyApplication) getApplication();
+        app = (MyApplication) getApplication();
         auth = app.getAuth();
         database = app.getDatabase();
+        
         binding = ActivityClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Client client = database.getClientById(auth.getCurrentUser().getUid());
-        client.setLocation(getUserLocation());
-        database.pushClient(client, auth.getCurrentUser().getUid());
-
-
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_settings)
+                R.id.navigation_home, R.id.dashboardFragment2, R.id.navigation_settings)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_client);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-
+        System.out.println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo" );
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            System.out.println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooo" + bundle);
+            String fragment = bundle.getString("fragment");
+            if (fragment.equals("specific_fragment")) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment_activity_client, new maps_percurso_client())
+                        .commit();
+            }
+        }
 
     }
 
@@ -76,8 +95,13 @@ public class ClientActivity extends AppCompatActivity {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         Task<Location> task = null;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        } else
+        {
+            System.out.println("tem permissao ne");
             task = fusedLocationClient.getLastLocation();
         }
+
 
         final LatLng[] loca = {null};
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -93,4 +117,30 @@ public class ClientActivity extends AppCompatActivity {
 
     }
 
+    public Client getClientById(String id){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(id);
+        final Client[] client = {null};
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                client[0] = dataSnapshot.getValue(Client.class);
+                client[0].setLocation(getUserLocation());
+                currentClient = client[0];
+                app.setCurrentClient(currentClient);
+                database.pushClient(client[0], auth.getCurrentUser().getUid());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Error retrieving object: " + databaseError.getMessage());
+            }
+        });
+        return client[0];
+
+    }
+
+    public Client getCurrentClient() {
+        return currentClient;
+    }
 }

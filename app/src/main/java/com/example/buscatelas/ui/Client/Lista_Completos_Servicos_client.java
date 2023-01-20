@@ -90,15 +90,17 @@ public class Lista_Completos_Servicos_client extends Fragment {
         al = new ArrayList<String>();
         aa = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_activated_1,al);
         lv.setAdapter(aa);
-        Authentication firebaseAuth = new Authentication(getActivity());
-        FirebaseUser client = firebaseAuth.getCurrentUser();
-        Client cli = databs.getClientById(client.getUid());
-        ArrayList<Request> req = cli.getPastRequests();
+        //Authentication firebaseAuth = new Authentication(getActivity());
+        //FirebaseUser client = firebaseAuth.getCurrentUser();
+        //Client cli = databs.getClientById(client.getUid());
+        //ArrayList<Request> req = cli.getPastRequests();
 
-        for (Request request: req) {
-            al.add(request.getSpecialization()); // mudar para a especialidade
-        }
-
+        //for (Request request: req) {
+        //    al.add(request.getSpecialization()); // mudar para a especialidade
+        //}
+        al.add("Plumber, Sr. Joaquim");
+        al.add("Painting, Gabriel");
+        al.add("Painting, Gabriel");
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
